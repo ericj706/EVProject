@@ -1,0 +1,166 @@
+[
+  {
+    "before": "AI_Capstone/collect_gangnam_poi.py",
+    "after": "AI_Capstone/collection/collect_gangnam_poi.py"
+  },
+  {
+    "before": "AI_Capstone/preprocessing_phase1.py",
+    "after": "AI_Capstone/preprocessing/preprocessing_phase1.py"
+  },
+  {
+    "before": "AI_Capstone/spatial_preprocessing.py",
+    "after": "AI_Capstone/preprocessing/spatial_preprocessing.py"
+  },
+  {
+    "before": "AI_Capstone/update_poi_only.py",
+    "after": "AI_Capstone/preprocessing/update_poi_only.py"
+  },
+  {
+    "before": "AI_Capstone/demand_index_modeling.py",
+    "after": "AI_Capstone/modeling/demand_index_modeling.py"
+  },
+  {
+    "before": "AI_Capstone/siting_and_optimization.py",
+    "after": "AI_Capstone/optimization/siting_and_optimization.py"
+  },
+  {
+    "before": "AI_Capstone/baseline_comparison.py",
+    "after": "AI_Capstone/evaluation/baseline_comparison.py"
+  },
+  {
+    "before": "AI_Capstone/calculate_real_metrics.py",
+    "after": "AI_Capstone/evaluation/calculate_real_metrics.py"
+  },
+  {
+    "before": "AI_Capstone/gangnam_ev_siting_pipeline.py",
+    "after": "AI_Capstone/pipeline/gangnam_ev_siting_pipeline.py"
+  },
+  {
+    "before": "AI_Capstone/check_cols.py",
+    "after": "AI_Capstone/diagnostics/check_cols.py"
+  },
+  {
+    "before": "AI_Capstone/inspect_data2.py",
+    "after": "AI_Capstone/diagnostics/inspect_data2.py"
+  },
+  {
+    "before": "AI_Capstone/read_excel.py",
+    "after": "AI_Capstone/diagnostics/read_excel.py"
+  },
+  {
+    "before": "AI_Capstone/debug.py",
+    "after": "AI_Capstone/diagnostics/debug.py"
+  },
+  {
+    "before": "AI_Capstone/debug2.py",
+    "after": "AI_Capstone/diagnostics/debug2.py"
+  },
+  {
+    "before": "AI_Capstone/debug_milp.py",
+    "after": "AI_Capstone/diagnostics/debug_milp.py"
+  },
+  {
+    "before": "AI_Capstone/scratch_script.py",
+    "after": "AI_Capstone/archive/experiments/scratch_script.py"
+  },
+  {
+    "before": "AI_Capstone/scratch_script2.py",
+    "after": "AI_Capstone/archive/experiments/scratch_script2.py"
+  },
+  {
+    "before": "AI_Capstone/scratch_script3.py",
+    "after": "AI_Capstone/archive/experiments/scratch_script3.py"
+  },
+  {
+    "before": "AI_Capstone/scratch_script4.py",
+    "after": "AI_Capstone/archive/experiments/scratch_script4.py"
+  },
+  {
+    "before": "AI_Capstone/scratch_script5.py",
+    "after": "AI_Capstone/archive/experiments/scratch_script5.py"
+  },
+  {
+    "before": "AI_Capstone/scratch_script6.py",
+    "after": "AI_Capstone/archive/experiments/scratch_script6.py"
+  },
+  {
+    "before": "AI_Capstone/pipeline_output.txt",
+    "after": "AI_Capstone/archive/logs/pipeline_output.txt"
+  },
+  {
+    "before": "AI_Capstone/pipeline_output2.txt",
+    "after": "AI_Capstone/archive/logs/pipeline_output2.txt"
+  },
+  {
+    "before": "AI_Capstone/run_pipeline.log",
+    "after": "AI_Capstone/archive/logs/run_pipeline.log"
+  },
+  {
+    "before": "AI_Capstone/scratch_columns.txt",
+    "after": "AI_Capstone/archive/logs/scratch_columns.txt"
+  },
+  {
+    "before": "AI_Capstone/scratch_columns2.txt",
+    "after": "AI_Capstone/archive/logs/scratch_columns2.txt"
+  },
+  {
+    "before": "AI_Capstone/scratch_out5.txt",
+    "after": "AI_Capstone/archive/logs/scratch_out5.txt"
+  },
+  {
+    "before": "AI_Capstone/scratch_script4_out.txt",
+    "after": "AI_Capstone/archive/logs/scratch_script4_out.txt"
+  },
+  {
+    "before": "AI_Capstone/sandbox_devnull.tmp",
+    "after": "AI_Capstone/archive/logs/sandbox_devnull.tmp"
+  },
+  {
+    "before": "AI_Capstone/gangnam_POI.csv",
+    "after": "AI_Capstone/resources/gangnam_POI.csv"
+  },
+  {
+    "before": "AI_Capstone/gangnam_ev_parking_lots.xlsx",
+    "after": "AI_Capstone/resources/gangnam_ev_parking_lots.xlsx"
+  },
+  {
+    "before": "AI_Capstone/data.json",
+    "after": "AI_Capstone/outputs/data.json"
+  },
+  {
+    "before": "AI_Capstone/data.js",
+    "after": "AI_Capstone/outputs/data.js"
+  },
+  {
+    "before": "AI_Capstone/heatmap.json",
+    "after": "AI_Capstone/outputs/heatmap.json"
+  },
+  {
+    "before": "AI_Capstone/heatmap.js",
+    "after": "AI_Capstone/outputs/heatmap.js"
+  },
+  {
+    "before": "AI_Capstone/existing_stations.json",
+    "after": "AI_Capstone/outputs/existing_stations.json"
+  },
+  {
+    "before": "AI_Capstone/existing_stations.js",
+    "after": "AI_Capstone/outputs/existing_stations.js"
+  },
+  {
+    "before": "AI_Capstone/run_dashboard.py",
+    "after": "run_dashboard.py"
+  },
+  {
+    "before": "dashboard/build_standalone.py",
+    "after": "dashboard/tools/build_standalone.py"
+  },
+  {
+    "before": "dashboard/script.txt",
+    "after": "dashboard/archive/script.txt"
+  },
+  {
+    "before": "dashboard/test.json",
+    "after": "dashboard/archive/test.json"
+  }
+]

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>강남구 EV 최적화 솔루션 대시보드</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Heatmap Plugin -->
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <nav class="glass-sidebar">
+            <div class="logo">
+                <h2>EV.Ops</h2>
+                <p>Gangnam Optimization</p>
+            </div>
+            <ul class="tab-menu">
+                <li class="active" data-tab="tab_summary">
+                    <span class="icon">📊</span>
+                    <span>종합 요약</span>
+                </li>
+                <li data-tab="tab_demand">
+                    <span class="icon">🔥</span>
+                    <span>1단계: 잠재 수요 히트맵</span>
+                </li>
+                <li data-tab="tab_siting">
+                    <span class="icon">⚡</span>
+                    <span>2단계: 최적 입지 솔루션</span>
+                </li>
+                <li data-tab="tab_queue">
+                    <span class="icon">⏱️</span>
+                    <span>3단계: 서비스 품질 검증</span>
+                </li>
+                <li data-tab="tab_baseline">
+                    <span class="icon">🆚</span>
+                    <span>4단계: Baseline 성능 비교</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <p>Academic & Research Pro</p>
+                <small>MILP & M/M/c Model</small>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- [메뉴 1] 종합 요약 (Executive Summary) -->
+            <div id="summary-container" class="tab-content-panel summary-view">
+                <div class="summary-header">
+                    <h1>강남구 EV 충전 인프라 최적 입지 선정 결과</h1>
+                    <p class="subtitle">수리 최적화 모델(MILP) 및 대기행렬 이론(Queueing Theory) 융합 분석</p>
+                </div>
+
+                <div class="kpi-grid">
+                    <div class="kpi-card glass-panel highlight-purple">
+                        <div class="kpi-icon">💰</div>
+                        <h4>총 사용 예산</h4>
+                        <div class="kpi-value"><span id="sum-budget">0.0</span>억</div>
+                        <div class="kpi-sub">총 예산 한도: 10.0억 원</div>
+                    </div>
+                    <div class="kpi-card glass-panel highlight-cyan">
+                        <div class="kpi-icon">📍</div>
+                        <h4>총 설치 충전소 (격자)</h4>
+                        <div class="kpi-value"><span id="sum-grids">0</span>개소</div>
+                        <div class="kpi-sub">(급속 <span id="sum-fast">0</span>대 / 완속 <span id="sum-slow">0</span>대)</div>
+                    </div>
+                    <div class="kpi-card glass-panel highlight-green">
+                        <div class="kpi-icon">📈</div>
+                        <h4>수요지 커버리지</h4>
+                        <div class="kpi-value"><span id="sum-coverage">45</span>% → <span id="sum-coverage-next">87</span>%</div>
+                        <div class="kpi-sub">기존 인프라 대비 +42%p 향상</div>
+                    </div>
+                    <div class="kpi-card glass-panel highlight-red">
+                        <div class="kpi-icon">⏱️</div>
+                        <h4>평균 대기 시간</h4>
+                        <div class="kpi-value"><span id="sum-wait">4.78</span>분</div>
+                        <div class="kpi-sub">대형 거점 대기 시간 대폭 단축</div>
+                    </div>
+                </div>
+
+                <div class="summary-detail-grid">
+                    <div class="detail-card glass-panel">
+                        <h3>🔑 투트랙(Two-Track) 입지 선정 전략</h3>
+                        <ul>
+                            <li>
+                                <strong>Track 1: 기존 인프라 고도화 (부설 주차장)</strong>
+                                <p>공영/민영 주차장 및 대형마트, 공공기관 격자 대상. 주차면수의 10% 이내로 충전 한도($P_j$) 적용하여 안정적 전기 용량 공급 확보.</p>
+                            </li>
+                            <li>
+                                <strong>Track 2: 가로변 신규 설치 (노상 주차장)</strong>
+                                <p>도로 인접 상업/업무 격자 대상. 학교 반경 50m 보호구역 및 녹지/공원 50% 이상 격자는 원천 차단(Masking)하여 설치 안정성 극대화.</p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="detail-card glass-panel">
+                        <h3>📈 강남구 충전 인프라: Before & After</h3>
+                        <div class="ba-text-section" style="margin-top: 10px;">
+                            <div class="ba-item">
+                                <span class="ba-label before">Before</span>
+                                <p>공영주차장에만 편중된 인프라, <strong>낮 시간대 상업지구 충전난 심각</strong></p>
+                            </div>
+                            <div class="ba-item">
+                                <span class="ba-label after">After</span>
+                                <p>주야간(생활인구+거주인구) 수요가 모두 반영된 <strong>투트랙 하이브리드형 인프라 구축 완비</strong></p>
+                            </div>
+                        </div>
+                        <div class="ba-chart-container" style="position: relative; height: 180px; margin-top: 15px;">
+                            <canvas id="beforeAfterChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map View Area for Tab 1 & Tab 2 -->
+            <div id="map-container" class="map-container hidden">
+                <div id="map"></div>
+
+                <!-- Tab 1 Dynamic Toggle Control -->
+                <div id="demand-toggle-panel" class="demand-toggle-panel glass-panel hidden">
+                    <h3>🔥 수요 분석 타겟 토글</h3>
+                    <div class="toggle-btn-group">
+                        <button id="btn-day-target" class="toggle-btn active">☀️ 주간 통합 수요 핫스팟</button>
+                        <button id="btn-night-target" class="toggle-btn">🌙 야간 통합 수요 핫스팟</button>
+                    </div>
+                    <p class="toggle-desc">☀️ 주간: 상업 및 업무 밀집지역(강남역 테헤란로) 중심<br>🌙 야간: 아파트 및 주거 밀집지역(대치/개포) 중심</p>
+                </div>
+
+                <!-- Tab 2 Control and Map Overlay -->
+                <div id="siting-legend-panel" class="siting-legend-panel glass-panel hidden">
+                    <h3>⚡ 설치 유형 및 충전기 대수</h3>
+                    <div class="legend-item"><span class="legend-color fast"></span><span>급속 위주 설치 거점 (원 크기 ∝ 대수)</span></div>
+                    <div class="legend-item"><span class="legend-color slow"></span><span>완속 위주 설치 거점 (원 크기 ∝ 대수)</span></div>
+                    <div class="legend-item"><span class="legend-color existing"></span><span>기존 운영 중인 충전소</span></div>
+                    <button id="toggle-buffer-btn" class="glow-btn">커버리지 버퍼 500m 켜기</button>
+                </div>
+
+                <!-- SHAP Panel (Overlay for Tab 1) -->
+                <div id="shap-panel" class="shap-panel glass-panel sliding-hidden">
+                    <button id="close-shap" class="close-btn">&times;</button>
+                    <h3 id="shap-title">선택 격자 분석 영수증</h3>
+                    <div class="shap-score">
+                        <span>예측 수요 점수</span>
+                        <h2 id="shap-total-score">85<small>점</small></h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+                    <p class="shap-summary" id="shap-summary-text">
+                        "이 격자는 상업시설 밀집도와 전기차 등록대수가 높아 높은 점수가 부여되었습니다."
+                    </p>
+                </div>
+            </div>
+
+            <!-- [메뉴 4] 3단계: 서비스 품질 검증 (M/M/c Queueing) -->
+            <div id="queueing-container" class="queueing-container glass-panel hidden">
+                <div class="queue-header">
+                    <h2>서비스 품질 검증 및 증설 시뮬레이션 (M/M/c Queueing Model)</h2>
+                    <p>입지별 예상 수요 도달 시 대기 마비 상태 및 운영 가동률 실시간 시뮬레이션</p>
+                    <p id="sim-hint-text" style="margin-top: 5px; color: var(--neon-cyan); font-weight: 500;">급속 충전기를 증감하여 단기 충전 대기시간 병목 현상을 해소하세요.</p>
+                </div>
+                
+                <div class="queue-dashboard-layout">
+                    <!-- Top Dashboard Bar -->
+                    <div class="queue-top-panel glass-panel">
+                        <div class="top-section">
+                            <label>📍 검증 입지:</label>
+                            <select id="parking-select">
+                                <option value="A">역삼1동 주민센터 격자 (ID: 412)</option>
+                                <option value="B">대치2동 공영주차장 격자 (ID: 875)</option>
+                                <option value="C">삼성동 대형마트 격자 (ID: 154)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="top-section spec-list-horizontal">
+                            <div class="spec-item-h"><span>한도:</span><strong id="spec-limit">10대</strong></div>
+                            <div class="spec-item-h"><span>할당:</span><strong id="spec-assigned">급속 2 / 완속 3</strong></div>
+                            <div class="spec-item-h"><span>수요량:</span><strong id="spec-demand" class="text-cyan">High (87)</strong></div>
+                        </div>
+
+                        <div class="top-section">
+                            <div class="toggle-btn-group" id="sim-type-toggle">
+                                <button class="toggle-btn active" data-type="fast">⚡ 급속 인프라 (대기행렬)</button>
+                                <button class="toggle-btn" data-type="slow">🔋 완속 인프라 (점유율)</button>
+                            </div>
+                        </div>
+
+                        <div class="top-section machine-control-wrapper">
+                            <div class="machine-control">
+                                <button id="btn-minus" class="neon-btn red-btn">-1 대</button>
+                                <span id="current-machines">5</span>
+                                <button id="btn-plus" class="neon-btn green-btn">+1 대</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Dashboard View -->
+                    <div class="queue-bottom-panel">
+                        <!-- FAST QUEUEING METRICS -->
+                        <div id="queue-metrics-fast" class="queue-result-cards">
+                            <div class="result-card glass-panel">
+                                <h3>평균 대기시간 ($W_q$)</h3>
+                                <div class="time-display"><span id="wait-time-value">12.1</span> <small>분</small></div>
+                                <div id="wait-time-status" class="status-badge safe">안정권 (<15분)</div>
+                            </div>
+                            <div class="result-card glass-panel">
+                                <h3>급속 가동률 ($\rho$)</h3>
+                                <div class="gauge-chart-container">
+                                    <div class="gauge-circle-outer">
+                                        <div class="gauge-circle-inner">
+                                            <span id="util-value">84%</span>
+                                        </div>
+                                        <div class="gauge-progress" id="gauge-bar"></div>
+                                    </div>
+                                </div>
+                                <div id="util-status" class="status-badge safe">정상 가동</div>
+                            </div>
+                        </div>
+
+                        <!-- SLOW COVERAGE METRICS (Hidden by default) -->
+                        <div id="queue-metrics-slow" class="queue-result-cards hidden">
+                            <div class="result-card glass-panel">
+                                <h3>완속 충전 주차난 (부족 차량)</h3>
+                                <div class="time-display"><span id="coverage-ratio-value">85</span> <small>대</small></div>
+                                <div id="coverage-status" class="status-badge safe">양호 (수요 대응 가능)</div>
+                            </div>
+                            <div class="result-card glass-panel" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(135deg, rgba(30,30,40,0.8), rgba(15,15,20,0.9)); border: 1px solid rgba(255,255,255,0.05);">
+                                <h3>완속 장기 점유 메타포</h3>
+                                <div style="font-size: 4rem; margin: 10px 0;">🔌</div>
+                                <div style="margin-top:10px; font-size:1.15rem; color:var(--text-secondary); line-height: 1.6;">
+                                    거주민 및 직장인의 체류 차량이<br>안정적으로 거치되어<br><b style="color:var(--neon-cyan); font-size:1.3rem;">"주차 = 충전"</b><br>달성 시뮬레이션
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 차트 영역 -->
+                        <div class="queue-chart-card glass-panel">
+                            <h3>📊 급속 인프라 대기시간 병목 추이 예측</h3>
+                            <div class="chart-container">
+                                <canvas id="queueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- [메뉴 5] 4단계: Baseline 비교 -->
+            <div id="baseline-container" class="tab-content-panel hidden" style="padding: 20px;">
+                <div class="summary-header">
+                    <h1>🆚 AI 최적화 vs 기존 행정 편의주의(Baseline) 성능 비교</h1>
+                    <p class="subtitle">관공서/공영주차장에만 예산을 균등 분배한 결과와의 정량적 지표 비교</p>
+                </div>
+                
+                <div class="kpi-comparison-wrapper" style="display: flex; gap: 20px;">
+                    <!-- Coverage Group -->
+                    <div class="kpi-group glass-panel" style="flex: 1; border: 1px solid var(--neon-cyan); padding: 15px;">
+                        <h3 style="text-align: center; color: var(--neon-cyan); margin-bottom: 20px;">🎯 수요 커버리지 비교</h3>
+                        <div style="display: flex; justify-content: space-around; align-items: center;">
+                            <div style="text-align: center;">
+                                <h4 style="color: #ccc; font-weight: normal; margin-bottom: 5px;">Baseline (관공서)</h4>
+                                <div class="kpi-value" style="font-size: 2.2rem;"><span id="cmp-base-cov" style="color: #f39c12;">0</span>%</div>
+                            </div>
+                            <div style="font-size: 2rem; color: #555;">▶</div>
+                            <div style="text-align: center;">
+                                <h4 style="color: #ccc; font-weight: normal; margin-bottom: 5px;">AI 최적화</h4>
+                                <div class="kpi-value" style="font-size: 2.6rem;"><span id="cmp-ai-cov" class="text-cyan">0</span>%</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Wait Time Group -->
+                    <div class="kpi-group glass-panel" style="flex: 1; border: 1px solid var(--neon-purple); padding: 15px;">
+                        <h3 style="text-align: center; color: var(--neon-purple); margin-bottom: 20px;">⏱️ 평균 대기시간 비교</h3>
+                        <div style="display: flex; justify-content: space-around; align-items: center;">
+                            <div style="text-align: center;">
+                                <h4 style="color: #ccc; font-weight: normal; margin-bottom: 5px;">Baseline (관공서)</h4>
+                                <div class="kpi-value" style="font-size: 2.2rem;"><span id="cmp-base-wait" class="text-red">0</span>분</div>
+                            </div>
+                            <div style="font-size: 2rem; color: #555;">▶</div>
+                            <div style="text-align: center;">
+                                <h4 style="color: #ccc; font-weight: normal; margin-bottom: 5px;">AI 최적화</h4>
+                                <div class="kpi-value" style="font-size: 2.6rem;"><span id="cmp-ai-wait" class="text-green">0</span>분</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="summary-detail-grid" style="margin-top: 20px; display: flex; gap: 20px; align-items: stretch; height: 260px;">
+                    <div class="detail-card glass-panel" style="flex: 1; font-size: 0.95rem; display: flex; flex-direction: column; justify-content: center; padding: 20px;">
+                        <h3 style="margin-bottom: 15px; color: #fff;">📊 핵심 성능 비교 요약</h3>
+                        <p style="margin-top:5px; line-height: 1.6; color: #ccc;">
+                            <strong>관공서 위주의 1/N 균등 배분 (Baseline)</strong>은 10억의 예산으로 주간 충전 수요가 폭발하는 <b>상업/업무지구</b>의 수요를 거의 흡수하지 못하며, 소수의 관공서 거점에 극심한 병목 현상(대기행렬 마비)을 초래합니다.
+                        </p>
+                        <p style="margin-top:15px; line-height: 1.6; color: #ccc;">
+                            반면 <strong>AI 최적화 모델</strong>은 공시지가 페널티를 회피하여 상업지/가로변 등에 예산을 영리하게 분산 투자함으로써, <b>동일한 비용으로 수요 커버리지를 비약적으로 향상시키고 대기시간 병목을 완전히 해소</b>합니다.
+                        </p>
+                    </div>
+                    <div class="detail-card glass-panel" style="flex: 1; position: relative; padding: 0; overflow: hidden; border: 1px solid #f39c12;">
+                        <h4 style="position: absolute; top: 10px; left: 10px; z-index: 1000; background: rgba(0,0,0,0.8); padding: 6px 12px; border-radius: 4px; border: 1px solid #f39c12; color: #f39c12; font-weight: 500;">📍 Baseline (관공서) 편중 설치 위치</h4>
+                        <div id="mini-map" style="width: 100%; height: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+    
+    <script src="data.js"></script>
+    <script src="heatmap.js"></script>
+    <script src="existing_stations.js"></script>
+    <script src="baseline_data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
